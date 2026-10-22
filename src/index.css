@@ -1,0 +1,316 @@
+:root,
+[data-theme='light'] {
+  --bg: #f5f7fa;
+  --surface: #ffffff;
+  --text: #1a1a1a;
+  --muted: #6b7280;
+  --primary: #2563eb;
+  --primary-text: #ffffff;
+  --danger: #dc2626;
+  --border: #e5e7eb;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+[data-theme='dark'] {
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --primary: #3b82f6;
+  --primary-text: #ffffff;
+  --danger: #ef4444;
+  --border: #334155;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  transition: background 0.2s, color 0.2s;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.nav-links,
+.nav-right {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.navbar a {
+  color: var(--muted);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: all 0.15s;
+}
+
+.navbar a:hover {
+  color: var(--text);
+  background: var(--bg);
+}
+
+.navbar a.active {
+  color: var(--primary-text);
+  background: var(--primary);
+}
+
+.user-info {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* Container */
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.container.narrow {
+  max-width: 420px;
+}
+
+h1 {
+  margin-top: 0;
+}
+
+/* Grid каталога */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.card h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.price {
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 18px;
+  margin: 0;
+}
+
+/* Кнопки */
+.btn {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: opacity 0.15s;
+}
+
+.btn:hover {
+  opacity: 0.85;
+}
+
+.btn.primary {
+  background: var(--primary);
+  color: var(--primary-text);
+  border-color: var(--primary);
+}
+
+.btn.danger {
+  background: var(--danger);
+  color: #fff;
+  border-color: var(--danger);
+}
+
+/* Корзина */
+.cart-list {
+  list-style: none;
+  padding: 0;
+}
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.cart-name {
+  flex: 1;
+}
+
+.cart-name em {
+  color: var(--muted);
+  font-style: normal;
+  font-size: 13px;
+}
+
+.cart-price {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.cart-footer {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Формы */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--surface);
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+.form label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.form input {
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+}
+
+.error {
+  color: var(--danger);
+  font-size: 14px;
+  margin: 0;
+}
+/* Loader */
+.loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 0;
+  color: var(--muted);
+}
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 12px;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Error box */
+.error-box {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+[data-theme='dark'] .error-box {
+  background: #450a0a;
+  color: #fecaca;
+  border-color: #7f1d1d;
+}
+.error-box p { margin: 0; }
+
+/* Поля формы */
+.form input.invalid {
+  border-color: var(--danger);
+}
+.field-error {
+  color: var(--danger);
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+/* Meta и muted */
+.muted { color: var(--muted); font-size: 14px; margin: 0; }
+.meta { color: var(--muted); font-size: 13px; margin: 4px 0; }
+.total-line { margin: 12px 0; font-size: 16px; }
+.cart-actions { display: flex; gap: 8px; }
+
+.badge {
+  background: var(--bg);
+  color: var(--muted);
+  border: 1px solid var(--border);
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+/* Фильтры */
+.filters { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+.filters select,
+.filters input { padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--text); }
+
+/* Карточка услуги */
+.service-header { display: grid; grid-template-columns: 320px 1fr; gap: 24px; margin-bottom: 24px; }
+.service-image { width: 100%; border-radius: 10px; }
+@media (max-width: 700px) { .service-header { grid-template-columns: 1fr; } }
+
+/* Отзывы */
+.reviews { list-style: none; padding: 0; }
+.review { padding: 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; }
+.rating { margin-left: 8px; }
+.review small { color: var(--muted); }
+
+/* Заказы */
+.orders { list-style: none; padding: 0; }
+.order { padding: 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+
+/* Контролы количества */
+.qty-controls { display: flex; align-items: center; gap: 6px; }
+.qty-controls .btn { padding: 4px 10px; }
+
+/* Секции профиля */
+.profile-section { margin-bottom: 32px; }
+.card-link { text-decoration: none; color: inherit; }
