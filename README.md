@@ -1,16 +1,190 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+# Service Shop — SPA-магазин услуг
 
-Currently, two official plugins are available:
+Полнофункциональное одностраничное приложение магазина услуг с клиент-серверной архитектурой.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Возможности
 
-## React Compiler
+- **Каталог услуг** с фильтрацией по категориям и максимальной цене
+- **Карточка услуги** с описанием, средней оценкой и отзывами
+- **Серверная корзина**, уникальная для каждого пользователя
+- **Оформление заказов** с адресом и датой доставки
+- **Отзывы** на услуги (только для авторизованных пользователей)
+- **Личный кабинет**: просмотр заказов, редактирование профиля, смена пароля
+- **Авторизация и регистрация** через JWT с хешированием паролей (bcrypt)
+- **Светлая и тёмная тема** с сохранением выбора
+- **Обработка ошибок и состояний загрузки** для всех запросов к API
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Стек технологий
 
-## Expanding the Oxlint configuration
+### Frontend
+- **React 18** — функциональные компоненты и хуки
+- **React Router v6** — клиентская маршрутизация
+- **Context API + useReducer** — глобальное состояние (тема, авторизация, корзина)
+- **axios** — HTTP-клиент с interceptors
+- **Vite** — сборщик и dev-сервер
+- **CSS-переменные** — темизация
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+### Backend
+- **Node.js + Express** — REST API
+- **SQLite (better-sqlite3)** — реляционная БД в одном файле
+- **JWT (jsonwebtoken)** — авторизация
+- **bcryptjs** — хеширование паролей
+- **CORS** — кросс-доменные запросы
+
+## Структура проекта
+
+```text
+test2/
+├── backend/                    # Серверная часть
+│   ├── server.js               # Точка входа Express
+│   ├── db.js                   # Подключение к SQLite
+│   ├── init-db.sql             # Схема БД и начальные данные
+│   ├── middleware/
+│   │   └── auth.js             # Проверка JWT
+│   └── routes/
+│       ├── auth.js             # Регистрация, вход, /me
+│       ├── services.js         # Каталог с фильтрами (JOIN)
+│       ├── cart.js             # Серверная корзина
+│       ├── orders.js           # Оформление заказов (транзакции)
+│       ├── reviews.js          # Отзывы (JOIN с users)
+│       └── profile.js          # Профиль и смена пароля
+│
+└── src/                        # Клиентская часть
+    ├── api/
+    │   └── client.js           # axios с interceptors
+    ├── context/
+    │   ├── ThemeContext.jsx
+    │   ├── AuthContext.jsx
+    │   └── CartContext.jsx
+    ├── components/
+    │   ├── Navbar.jsx
+    │   ├── ProtectedRoute.jsx
+    │   ├── Loader.jsx
+    │   └── ErrorMessage.jsx
+    ├── pages/
+    │   ├── Catalog.jsx
+    │   ├── ServicePage.jsx
+    │   ├── Cart.jsx
+    │   ├── Checkout.jsx
+    │   ├── Login.jsx
+    │   ├── Register.jsx
+    │   └── Profile.jsx
+    ├── App.jsx
+    ├── main.jsx
+    └── index.css
+```
+
+## Схема базы данных
+
+| Таблица | Назначение |
+|---|---|
+| `roles` | Роли пользователей (admin / client) |
+| `users` | Пользователи (email, хеш пароля, ФИО, телефон, адрес) |
+| `categories` | Категории услуг |
+| `services` | Каталог услуг (название, описание, длительность, цена, категория) |
+| `cart_items` | Серверная корзина (уникальна для пользователя) |
+| `orders` | Заказы (адрес доставки, дата, сумма, статус) |
+| `order_items` | Позиции заказа (с ценой на момент покупки) |
+| `reviews` | Отзывы на услуги (оценка 1–5, комментарий) |
+
+Все связи реализованы через внешние ключи, включён `PRAGMA foreign_keys = ON`.
+
+## Запуск проекта
+
+### Требования
+- **Node.js** версии 18+ (рекомендуется 20+)
+- **npm** версии 9+
+
+### 1. Клонирование
+
+```bash
+git clone https://github.com/Bukhanka453/Spa.git
+cd Spa
+```
+
+### 2. Запуск бэкенда
+
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+Бэкенд запустится на `http://localhost:4000`.  
+При первом запуске автоматически создастся `shop.db` и заполнится из `init-db.sql`.
+
+Проверка: открой `http://localhost:4000/api/health` — должно вернуться `{"ok":true}`.
+
+### 3. Запуск фронтенда
+
+В **новом терминале** из корня проекта:
+
+```bash
+npm install
+npm run dev
+```
+
+Фронтенд запустится на `http://localhost:5173`.
+
+> Важно: нужно **два терминала** — один для бэкенда, другой для фронтенда.
+
+## API Endpoints
+
+### Авторизация
+| Метод | URL | Описание |
+|---|---|---|
+| POST | `/api/auth/register` | Регистрация |
+| POST | `/api/auth/login` | Вход |
+| GET | `/api/auth/me` | Текущий пользователь |
+
+### Услуги
+| Метод | URL | Описание |
+|---|---|---|
+| GET | `/api/services` | Список услуг (с фильтрами `?category=&maxPrice=`) |
+| GET | `/api/services/:id` | Услуга со средней оценкой |
+| GET | `/api/services/categories` | Список категорий |
+
+### Корзина
+| Метод | URL | Описание |
+|---|---|---|
+| GET | `/api/cart` | Корзина текущего пользователя |
+| POST | `/api/cart` | Добавить услугу |
+| PUT | `/api/cart/:id` | Изменить количество |
+| DELETE | `/api/cart/:id` | Удалить позицию |
+| DELETE | `/api/cart` | Очистить корзину |
+
+### Заказы и отзывы
+| Метод | URL | Описание |
+|---|---|---|
+| POST | `/api/orders` | Оформить заказ |
+| GET | `/api/orders` | Мои заказы |
+| GET | `/api/orders/:id` | Заказ с позициями |
+| GET | `/api/reviews?serviceId=` | Отзывы на услугу |
+| POST | `/api/reviews` | Оставить отзыв |
+
+### Профиль
+| Метод | URL | Описание |
+|---|---|---|
+| PUT | `/api/profile` | Обновить личные данные |
+| PUT | `/api/profile/password` | Сменить пароль |
+
+## Безопасность
+
+- Пароли хранятся в виде **bcrypt-хеша** (10 раундов соли)
+- Авторизация — через **JWT** с истечением 7 дней
+- Все приватные эндпоинты защищены middleware `authRequired`
+- Корзина изолирована по `user_id` — пользователь не может видеть или изменить чужие позиции
+
+## Ключевые технические решения
+
+- **JOIN-запросы** для всех связей: категория приходит объектом в каталоге, автор отзыва — из `users`, позиции заказа — из `services`
+- **Транзакции** при оформлении заказа: `orders` + `order_items` + очистка корзины выполняются атомарно
+- **UPSERT** (`ON CONFLICT DO UPDATE`) для корзины — повторное добавление увеличивает количество, а не дублирует строку
+- **Interceptors** в axios — токен подставляется автоматически, 401 обрабатывается централизованно
+- **Context API** для глобального состояния, порядок провайдеров: `Theme → Auth → Cart`
+- **Двухуровневая валидация** форм — на клиенте и на сервере
+
+## Лицензия
+
+Учебный проект. Свободное использование в образовательных целях.
